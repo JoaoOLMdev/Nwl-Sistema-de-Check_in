@@ -1,6 +1,8 @@
 from src.models.settings.connection import db_connection_handler
 from src.models.entitites.check_ins import CheckIns
 from sqlalchemy.exc import IntegrityError
+from src.errors.error_types.http_conflict import HttpClonflictError
+
 
 class CheckInRepository:
     def insert_check_in(self, attendee_id):
@@ -15,7 +17,7 @@ class CheckInRepository:
                 database.session.commit()
                 return attendee_id
             except IntegrityError:
-                raise Exception('Check In  ja cadastrado!')
+                raise HttpClonflictError('Check In  ja cadastrado!')
             except Exception as exception:
                 database.session.rollback()
                 raise exception
